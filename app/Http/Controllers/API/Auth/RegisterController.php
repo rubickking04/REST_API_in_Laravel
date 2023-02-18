@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Models\User;
+use App\Mail\Welcome_Mail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -22,7 +24,7 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users|email',
-            'password' => 'required|confirmed|min:8',
+            'password' => 'required|min:8',
         ]);
         if  ($validator->fails()) {
             $reponse = [
@@ -43,6 +45,7 @@ class RegisterController extends Controller
             'data' => $success,
             'message' => "User registered successfully"
         ];
+        Mail::to($user->email)->send(new Welcome_Mail($user));
         Auth::login($user);
         return response()->json($reponse, 200);
     }
