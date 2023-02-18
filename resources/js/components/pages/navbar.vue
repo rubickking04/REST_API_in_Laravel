@@ -1,14 +1,21 @@
 <script setup>
     import { useRouter } from 'vue-router';
+    import axios from 'axios';
     const router = useRouter();
-    const logout = () => {
-        localStorage.removeItem('token');
-        router.push('/login');
+    const logout = async () => {
+        try {
+            await axios.post('/api/logout');
+            localStorage.removeItem('token');
+            router.push('/login');
+        }
+        catch (error) {
+            console.error(error);
+        }
     };
 </script>
 <template>
     <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-        <div class="container-fluid flex flex-wrap items-center justify-between mx-auto my-auto">
+        <div class="flex flex-wrap items-center justify-between mx-auto my-auto container-fluid">
             <a href="https://flowbite.com/" class="flex items-center">
                 <img src="https://tailwindui.com/img/logos/mark.svg?color=blue&shade=600" class="h-6 mr-3 sm:h-9" alt="Flowbite Logo">
                 <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">tailwindcss</span>

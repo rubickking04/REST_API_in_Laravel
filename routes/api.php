@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\LoginController;
+use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegisterController;
 
 /*
@@ -24,4 +25,7 @@ Route::controller(RegisterController::class)->group(function() {
 });
 Route::controller(LoginController::class)->group(function() {
     Route::post('/login', 'login')->name('login');
+});
+Route::controller(LogoutController::class)->group(function () {
+    Route::post('/logout', 'logout')->name('logout');
 });
