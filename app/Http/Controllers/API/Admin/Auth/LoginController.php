@@ -35,13 +35,13 @@ class LoginController extends Controller
         $user = \App\Models\Admin::where($this->username(), $request->{$this->username()})->first();
         if ($user && !Hash::check($request->password, $user->password)) {
             $errors = [
-                'message' => 'The provided password is incorrect.'
+                'message' => 'Administrator\'s password is incorrect.'
             ];
             return response()->json($errors, 200);
         }
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-            $user = $request->user();
-            $success['token'] = $user->createToken('MyApp')->plainTextToken;
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            $user = $request->user('admin');
+            $success['token'] = $user->createToken('AdminToken')->plainTextToken;
             $success['name'] = $user->name;
             $errors = [
                 'success' => true,
@@ -50,7 +50,7 @@ class LoginController extends Controller
             ];
             return response()->json($errors, 200);
         }
-        if (!Auth::attempt(['email' => $request->email])) {
+        if (!Auth::guard('admin')->attempt(['email' => $request->email])) {
             $errors = [
                 'message' => 'These credentials do not match our records.',
             ];

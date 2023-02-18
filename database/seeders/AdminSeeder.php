@@ -15,10 +15,18 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        Admin::create([
+        $user = Admin::create([
             'name' => 'Administrator',
             'email' => 'rubickking04@gmail.com',
             'password' => bcrypt('admin123')
         ]);
+        $success['token'] = $user->createToken('AdminToken')->plainTextToken;
+        $success['name'] = $user->name;
+        $reponse = [
+            'success' => true,
+            'data' => $success,
+            'message' => "User registered successfully"
+        ];
+        return response()->json($reponse, 200);
     }
 }
