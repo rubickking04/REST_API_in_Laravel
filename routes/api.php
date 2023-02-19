@@ -32,10 +32,6 @@ Route::middleware('auth:user-api')->group(function () {
         Route::post('/logout', 'logout')->name('logout');
     });
 });
-
-// Route::middleware('auth:admin')->get('/admin', function (Request $request) {
-//     return $request->user();
-// });
 /*
 |--------------------------------------------------------------------------
 | API Routes for Admin Authentication
