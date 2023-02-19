@@ -45,7 +45,7 @@ class Kernel extends HttpKernel
             'auth:sanctum'
         ],
         'admin' => [
-            // 'throttle:60,1',
+            'throttle:60,1',
             'auth:admin',
         ],
     ];
