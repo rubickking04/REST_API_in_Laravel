@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -25,12 +26,12 @@ class LoginController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:8',
         ]);
-        if  ($validator->fails()) {
+        if ($validator->fails()) {
             $errors = [
                 'success' => false,
                 'errors' => $validator->errors(),
             ];
-        return response()->json($errors, 200);
+            return response()->json($errors, 200);
         }
         $errors = [$this->username() => trans('auth.failed')];
         $user = \App\Models\User::where($this->username(), $request->{$this->username()})->first();
@@ -40,19 +41,18 @@ class LoginController extends Controller
             ];
             return response()->json($errors, 200);
         }
-        if (Auth::attempt(['email' => $request->email, 'password'=> $request->password], $request->remember))
-        {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $user = $request->user();
             $success['token'] = $user->createToken('MyApp')->plainTextToken;
             $success['name'] = $user->name;
             $errors = [
                 'success' => true,
                 'data' => $success,
-                'message' => "Welcome ". $user->name ." to MyApp"
+                'message' => "Welcome " . $user->name . " to MyApp"
             ];
             return response()->json($errors, 200);
         }
-        if (! Auth::attempt(['email' => $request->email])) {
+        if (!Auth::attempt(['email' => $request->email])) {
             $errors = [
                 'message' => 'These credentials do not match our records.',
             ];

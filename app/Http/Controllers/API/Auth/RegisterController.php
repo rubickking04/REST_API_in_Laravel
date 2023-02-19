@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -38,15 +39,23 @@ class RegisterController extends Controller
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
-        $success['token'] = $user->createToken('MyApp')->plainTextToken;
+        $accessToken = $user->createToken("MyApp");
+        PersonalAccessToken::create([
+            'token' => hash('sha256', $accessToken->plainTextToken),
+            'name' => $accessToken->name,
+            'abilities' => $accessToken->abilities,
+            'tokenable_id' => $user->id,
+            'tokenable_type' => get_class($user),
+        ]);
+        $success['token'] = $accessToken->plainTextToken; // Set the token in the response
         $success['name'] = $user->name;
-        $reponse = [
+        $response = [
             'success' => true,
             'data' => $success,
             'message' => "User registered successfully"
         ];
         Mail::to($user->email)->send(new Welcome_Mail($user));
         Auth::login($user);
-        return response()->json($reponse, 200);
+        return response()->json($response, 200);
     }
 }
