@@ -51,9 +51,8 @@ Route::controller(AdminLoginController::class)->group(function () {
 });
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin', function(Request $request) {
-        $admin = $request->user('admin');
-        return response()->json($admin);
-    });
+        return $request->user('admin');
+    })->name('admin.home');
     Route::controller(AdminLogoutController::class)->group(function () {
         Route::post('/admin/logout', 'logout')->name('admin.logout');
     });

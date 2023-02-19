@@ -15,17 +15,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        // if (!$request->expectsJson()) {
-        //     return route('login');
-        // }
-        if ($request->is('admin/*')) {
-            if (!Auth::guard('admin')->check()) {
-                // Alert::toast('Please Login an account first!', 'info');
-                return route('admin.login');
-            }
-        }
-        else if (!Auth::guard('web')->check()) {
-            // Alert::toast('Please Login an account first!', 'info');
+        if (!$request->expectsJson()) {
             return route('login');
         }
     }
