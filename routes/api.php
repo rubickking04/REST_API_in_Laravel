@@ -24,7 +24,7 @@ Route::controller(RegisterController::class)->group(function() {
 Route::controller(LoginController::class)->group(function() {
     Route::post('/login', 'login')->name('login');
 });
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:user-api')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::controller(AdminLoginController::class)->group(function () {
     Route::post('/admin/login', 'login')->name('admin.login');
 });
-Route::middleware('auth:admin')->group(function () {
+Route::middleware('auth:admin-api')->group(function () {
     Route::get('/admin', function(Request $request) {
         return $request->user();
     })->name('admin.home');
