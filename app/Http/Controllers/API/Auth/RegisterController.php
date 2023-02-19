@@ -27,31 +27,29 @@ class RegisterController extends Controller
             'email' => 'required|unique:users|email',
             'password' => 'required|min:8',
         ]);
-        if  ($validator->fails()) {
-            $reponse = [
+        if ($validator->fails()) {
+            $response = [
                 'success' => false,
                 'message' => $validator->errors(),
             ];
-        return response()->json($reponse, 200);
+            return response()->json($response, 200);
         }
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
-        $accessToken = $user->createToken("MyApp");
-        PersonalAccessToken::create([
-            'token' => hash('sha256', $accessToken->plainTextToken),
-            'name' => $accessToken->name,
-            'abilities' => $accessToken->abilities,
-            'tokenable_id' => $user->id,
-            'tokenable_type' => get_class($user),
-        ]);
-        $success['token'] = $accessToken->plainTextToken; // Set the token in the response
+        $success['token'] = $user->createToken('MyApp')->plainTextToken;
         $success['name'] = $user->name;
+        $user->tokens()->create([
+            'name' => $user->name,
+            'token' => hash('sha256', $success['token']),
+            'abilities' => ['*'],
+        ]);
         $response = [
             'success' => true,
             'data' => $success,
+            // 'my_token' => ,
             'message' => "User registered successfully"
         ];
         Mail::to($user->email)->send(new Welcome_Mail($user));

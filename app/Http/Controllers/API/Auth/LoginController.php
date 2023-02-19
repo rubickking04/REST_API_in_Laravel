@@ -45,6 +45,13 @@ class LoginController extends Controller
             $user = $request->user();
             $success['token'] = $user->createToken('MyApp')->plainTextToken;
             $success['name'] = $user->name;
+            // Add this code to save the token to the database
+            $user->tokens()->where('name', 'API Token')->delete();
+            $user->tokens()->create([
+                'name' => 'API Token',
+                'token' => hash('sha256', $success['token']),
+                'abilities' => ['*'],
+            ]);
             $errors = [
                 'success' => true,
                 'data' => $success,
