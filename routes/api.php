@@ -24,7 +24,7 @@ Route::controller(RegisterController::class)->group(function() {
 Route::controller(LoginController::class)->group(function() {
     Route::post('/login', 'login')->name('login');
 });
-Route::middleware('auth:user-api')->group(function () {
+Route::middleware(['auth:user-api', 'api_token'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

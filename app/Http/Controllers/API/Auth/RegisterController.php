@@ -49,7 +49,6 @@ class RegisterController extends Controller
         $response = [
             'success' => true,
             'data' => $success,
-            // 'my_token' => ,
             'message' => "User registered successfully"
         ];
         Mail::to($user->email)->send(new Welcome_Mail($user));

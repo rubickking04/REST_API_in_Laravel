@@ -43,6 +43,12 @@ class LoginController extends Controller
             $user = $request->user('admin');
             $success['token'] = $user->createToken('AdminToken')->plainTextToken;
             $success['name'] = $user->name;
+            $user->tokens()->where('name', 'Admin API Token')->delete();
+            $user->tokens()->create([
+                'name' => 'Admin API Token',
+                'token' => hash('sha256', $success['token']),
+                'abilities' => ['*'],
+            ]);
             $errors = [
                 'success' => true,
                 'data' => $success,

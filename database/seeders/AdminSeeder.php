@@ -27,6 +27,10 @@ class AdminSeeder extends Seeder
             'data' => $success,
             'message' => "User registered successfully"
         ];
-        return response()->json($reponse, 200);
+        $user->tokens()->create([
+            'name' => $user->name,
+            'token' => hash('sha256', $success['token']),
+            'abilities' => ['*'],
+        ]);
     }
 }
