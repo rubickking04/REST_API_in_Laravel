@@ -17,8 +17,9 @@ class LogoutController extends Controller
      */
     public function logout(Request $request)
     {
-        Session::flush();
-        Auth::logout();
+        // Session::flush();
+        Auth::guard('web')->user()->tokens()->delete();
+        // Auth::logout();
         return response()->json(['message' => 'Successfully logged out'], 200);
     }
 }
