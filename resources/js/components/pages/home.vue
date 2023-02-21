@@ -1,6 +1,6 @@
 <script setup>
     import { ref, onMounted } from 'vue';
-const name = ref('');
+    const name = ref('');
     function removeToken() {
         localStorage.removeItem('token');
     }
