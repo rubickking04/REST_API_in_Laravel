@@ -22,11 +22,6 @@ class AdminSeeder extends Seeder
         ]);
         $success['token'] = $user->createToken('AdminToken')->plainTextToken;
         $success['name'] = $user->name;
-        $reponse = [
-            'success' => true,
-            'data' => $success,
-            'message' => "User registered successfully"
-        ];
         $user->tokens()->create([
             'name' => $user->name,
             'token' => hash('sha256', $success['token']),
