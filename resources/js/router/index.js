@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { onMounted } from 'vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -32,21 +33,23 @@ const router = createRouter({
         }
     ]
 })
-router.beforeEach((to,from) => {
-    if (to.meta.requiresAuth && !localStorage.getItem('token')) {
-        return {
-            name: 'login',
-        }
+router.beforeEach((to, from, next) => {
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const guest = to.matched.some(record => record.meta.guest);
+    const isLoggedIn = localStorage.getItem('token');
+    if (requiresAuth && !isLoggedIn) {
+        next({ name: 'login' });
+    } else if (guest && isLoggedIn) {
+        next({ name: 'home' });
+    } else {
+        next();
     }
-    if (to.meta.requiresAuth  == false && localStorage.getItem('token')) {
-        return {
-            name: 'home',
-        }
-    }
-    if (to.meta.guest && localStorage.getItem('token') !== null) {
-        return {
-            name: 'home',
-        }
-    }
+});
+
+onMounted(() => {
+    window.Echo.private('database-refreshed')
+        .listen('.App\\Events\\DatabaseRefreshed', () => {
+            router.push({ name: 'login' })
+        })
 })
 export default router

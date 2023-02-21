@@ -7,7 +7,6 @@ use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\API\Admin\Auth\LogoutController as AdminLogoutController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes for User Authentication

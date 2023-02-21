@@ -19,3 +19,7 @@ Route::get('/', function () {
 Route::get('/{pathMatch}', function() {
     return view('welcome');
 })->where('pathMatch',".*");
+Route::post('/refresh-database', function () {
+    event(new App\Events\DatabaseRefreshed());
+    return 'Database refreshed';
+});
