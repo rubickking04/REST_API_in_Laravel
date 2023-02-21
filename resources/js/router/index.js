@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { onMounted } from 'vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -45,11 +44,4 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
-
-onMounted(() => {
-    window.Echo.private('database-refreshed')
-        .listen('.App\\Events\\DatabaseRefreshed', () => {
-            router.push({ name: 'login' })
-        })
-})
 export default router

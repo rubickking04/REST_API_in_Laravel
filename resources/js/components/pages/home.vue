@@ -1,11 +1,22 @@
 <script setup>
     import { ref, onMounted } from 'vue';
-    const name = ref('');
-    onMounted(async() => {
-        const data = await axios.get('api/user');
-        name.value = data.data.name;
-        // console.log(data);
-    })
+const name = ref('');
+    function removeToken() {
+        localStorage.removeItem('token');
+    }
+    onMounted(async () => {
+        try {
+            const data = await axios.get('api/user');
+            name.value = data.data.name;
+            console.log(data);
+        }
+        catch (error) {
+            if (error.response.status === 401) {
+                removeToken();
+            }
+            console.error(error);
+        }
+    });
 </script>
 <template>
     <div class="py-20">
