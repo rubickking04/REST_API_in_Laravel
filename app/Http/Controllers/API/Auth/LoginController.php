@@ -66,4 +66,7 @@ class LoginController extends Controller
             return response()->json($errors, 200);
         }
     }
+    public function index(){
+        return response()->json(['message' => 'Unauthenticated.'], 401);
+    }
 }

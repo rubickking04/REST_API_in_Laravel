@@ -19,17 +19,18 @@ use App\Http\Controllers\API\Admin\Auth\LogoutController as AdminLogoutControlle
 |
 */
 Route::controller(RegisterController::class)->group(function() {
-    Route::post('/register', 'store')->name('register');
+    Route::post('/register', 'store');
 });
 Route::controller(LoginController::class)->group(function() {
-    Route::post('/login', 'login')->name('login');
+    Route::post('/login', 'login');
+    Route::get('/login', 'index')->name('login');
 });
 Route::middleware('auth:user-api')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
-    });
+    })->name('home');
     Route::controller(LogoutController::class)->group(function () {
-        Route::post('/logout', 'logout')->name('logout');
+        Route::post('/logout', 'logout');
     });
 });
 /*
